@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import {
     //Platform,
     SafeAreaView,
@@ -12,6 +12,8 @@ import {
 import { RestaurantInfo } from "../components/restaurant-info.component";
 import styled from "styled-components";
 import { Spacer } from "../../../components/spacer/spacer.component";
+import { RestaurantsContext } from "../../../services/restaurants/restaurants.context";
+import { ActivityIndicator, Colors } from "react-native-paper";
 
 const SafeArea = styled(SafeAreaView)`
 flex: 1;
@@ -33,9 +35,25 @@ flex: 1;
 padding: ${(props) => props.theme.space[3]};
 background-color: ${(props) => props.theme.colors.ui.primary};`
 
+const Loading = styled(ActivityIndicator)`
+margin-left: -25px
+`
+
+const LoadingContainer = styled(View)`
+position: absolute;
+top: 50%;
+left: 50%;
+`
+
 export const RestaurantsScreen = () => {
+  const {isLoading, error, restaurants} = useContext(RestaurantsContext)
     return(
     <SafeArea>
+      {isLoading && (
+        <LoadingContainer>
+          <Loading size={50} animating={true} color={Colors.red800}/>
+        </LoadingContainer>
+      )}
     <SearchContainer>
         <Searchbar
     placeholder="Search"
@@ -44,12 +62,13 @@ export const RestaurantsScreen = () => {
         />
     </SearchContainer>
     <RestaurantList
-    data = {[{name:1}, {name:2}, {name:3}, {name:4}]}
-    renderItem={()=> (
+    data = {restaurants}
+    renderItem={({item})=> {
+      return(
     <Spacer position="bottom" size="large">
-    <RestaurantInfo/>
+    <RestaurantInfo restaurant={item  }/>
     </Spacer>
-    )} 
+    )}} 
     keyExtractor={(item) => item.name}/>
   </SafeArea>
 )}

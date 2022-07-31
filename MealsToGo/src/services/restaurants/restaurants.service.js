@@ -2,16 +2,18 @@ import { mockImages, mocks } from "./mock"
 import camelize from "camelize";
 
 export const restaurantsRequest = (location) => {
-    //console.log(mocks)
-    //const mock = mocks[location]
-    //console.log("!!!san_francisco", mock)
+    //console.log("!!!location", location)
 
     return new Promise((resolve, reject) => {
+        //console.log("!!!2location", location)
         const mock = mocks[location];
+        //console.log("!!!mock",mock)
         if (!mock){
-            reject("no found location")
+            console.log("pumasok ba dito before reject?")
+            return reject("no found location")
         }
-            resolve(mock)
+        console.log("pumasok ba dito sa resolve??")
+            return resolve(mock)
     })
 }
 

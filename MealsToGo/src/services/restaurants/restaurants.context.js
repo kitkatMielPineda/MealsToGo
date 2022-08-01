@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useMemo, createContext} from "react"
+import React, {useState, useEffect, useMemo, createContext, useContext} from "react"
+import { LocationContext } from "../location/location.context"
 
 import { restaurantsRequest, restaurantsTransform } from "./restaurants.service"
 
@@ -6,29 +7,46 @@ export const RestaurantsContext = createContext()
 export const RestaurantsContextProvider = ({children}) => {
     const [restaurants, setRestaurants] = useState([])
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null)
+    const [error, setError] = useState(null)    
+    const {location} = useContext(LocationContext)
 
 
-    const retrieveRestaurants = () => {
-        setIsLoading(true)
-        setTimeout(()=> {
-            restaurantsRequest().then(restaurantsTransform).then((results) => {
-                setIsLoading(false)
-                setRestaurants(results)
-            }).catch((err) => {
-                setIsLoading(false)
-                setError(err)
+    const retrieveRestaurants = (loc) => {
+        setIsLoading(true);
+        setRestaurants([]);
+    
+        setTimeout(() => {
+            console.log("pumasok ba dito?")
+          restaurantsRequest(loc)
+            .then(restaurantsTransform)
+            .then((results) => {
+              setIsLoading(false);
+              setRestaurants(results);
+              console.log("!!!restaurants",restaurants)
             })
-        }, 2000)
-
-    }
+            .catch((err) => {
+              setIsLoading(false);
+              setError(err);
+            });
+        }, 2000);
+      };
 
     useEffect(()=>{
-        retrieveRestaurants()
-    }, [])
+        if (location){
+        const locationString = `${location.lat},${location.lng}`
+        retrieveRestaurants(locationString)
+        console.log("!!!locationString",locationString)
+        }
+    }, [location])
     return (
-        <RestaurantsContext.Provider value={{restaurants, isLoading, error}}>
-            {children}
+        <RestaurantsContext.Provider
+          value={{
+            restaurants,
+            isLoading,
+            error,
+          }}
+        >
+          {children}
         </RestaurantsContext.Provider>
-    )
+      );
 }

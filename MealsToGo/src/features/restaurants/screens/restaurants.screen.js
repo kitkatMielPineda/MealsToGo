@@ -6,7 +6,8 @@ import {
     Text,
     View,
     StatusBar,
-    FlatList
+    FlatList,
+    TouchableOpacity
   } from "react-native";
   //import { Searchbar } from 'react-native-paper';
 import { RestaurantInfo } from "../components/restaurant-info.component";
@@ -42,7 +43,7 @@ top: 50%;
 left: 50%;
 `
 
-export const RestaurantsScreen = () => {
+export const RestaurantsScreen = ({navigation}) => {
   const {isLoading, error, restaurants} = useContext(RestaurantsContext)
     return(
     <SafeArea>
@@ -56,9 +57,16 @@ export const RestaurantsScreen = () => {
     data = {restaurants}
     renderItem={({item})=> {
       return(
+        <TouchableOpacity
+        onPress={()=>navigation.navigate("RestaurantDetail", {
+          restaurant: item,
+        })
+      }
+        >
     <Spacer position="bottom" size="large">
     <RestaurantInfo restaurant={item}/>
     </Spacer>
+    </TouchableOpacity>
     )}} 
     keyExtractor={(item) => item.name}/>
   </SafeArea>

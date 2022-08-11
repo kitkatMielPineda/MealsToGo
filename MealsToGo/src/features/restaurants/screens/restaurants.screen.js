@@ -17,6 +17,7 @@ import { RestaurantsContext } from "../../../services/restaurants/restaurants.co
 import { ActivityIndicator, Colors } from "react-native-paper";
 import { Search } from "../components/search.component";
 import { SafeArea } from "../../../components/utility/safe-area.component";
+//import { FavouritesContext } from "../../../services/favourites/favourites.context";
 
 //const SearchContainer = styled(View)`
 //padding: ${(props) => props.theme.space[3]};
@@ -45,6 +46,7 @@ left: 50%;
 
 export const RestaurantsScreen = ({navigation}) => {
   const {isLoading, error, restaurants} = useContext(RestaurantsContext)
+  //const {favorites} = useContext(FavouritesContext)
     return(
     <SafeArea>
       {isLoading && (

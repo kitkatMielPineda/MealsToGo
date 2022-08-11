@@ -8,6 +8,8 @@ import open from '../../../../assets/open'
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { Text } from "../../../components/typography/text.component";
 import {Icon, Section, Rating, SectionEnd, Address, Info, RestaurantCard, RestaurantCardcover} from "../components/restaurant-info.styles"
+import { Favourite } from "../../../components/favourites/favourite.component";
+
 
 {/*const Title = styled(Text)`
 color: ${(props) => props.theme.colors.ui.primary};
@@ -31,6 +33,7 @@ export const RestaurantInfo = ({restaurant = {}}) => {
 //console.log(ratingArray)
     return(
         <RestaurantCard elevation={5}>
+            <Favourite restaurant={restaurant}/>
             <RestaurantCardcover source={{ uri: photos[0] }} />
             <Info>
                 <Text variant="label">{name}</Text>

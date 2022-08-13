@@ -17,7 +17,8 @@ import { RestaurantsContext } from "../../../services/restaurants/restaurants.co
 import { ActivityIndicator, Colors } from "react-native-paper";
 import { Search } from "../components/search.component";
 import { SafeArea } from "../../../components/utility/safe-area.component";
-//import { FavouritesContext } from "../../../services/favourites/favourites.context";
+import { FavouritesBar } from "../../../components/favourites/favourites-bar.component";
+import { FavouritesContext } from "../../../services/favourites/favourites.context";
 
 //const SearchContainer = styled(View)`
 //padding: ${(props) => props.theme.space[3]};
@@ -46,7 +47,8 @@ left: 50%;
 
 export const RestaurantsScreen = ({navigation}) => {
   const {isLoading, error, restaurants} = useContext(RestaurantsContext)
-  //const {favorites} = useContext(FavouritesContext)
+  const {favourites} = useContext(FavouritesContext)
+  const [isToggled, setIsToggled] = useState(false)
     return(
     <SafeArea>
       {isLoading && (
@@ -54,7 +56,11 @@ export const RestaurantsScreen = ({navigation}) => {
           <Loading size={50} animating={true} color={Colors.red800}/>
         </LoadingContainer>
       )}
-    <Search />
+    <Search
+    isFavouritesToggled={isToggled} 
+    onFavouritesToggle={()=>setIsToggled(!isToggled)}
+    />
+    {isToggled && <FavouritesBar favourites={favourites} onNavigate={navigation.navigate}/>}
     <RestaurantList
     data = {restaurants}
     renderItem={({item})=> {

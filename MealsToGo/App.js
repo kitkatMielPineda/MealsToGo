@@ -1,5 +1,5 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import React, { createElement, useState } from "react";
+import React, { createElement, useState, useEffect } from "react";
 import {
   //Platform,
   SafeAreaView,
@@ -22,9 +22,40 @@ import { LocationContextProvider } from "./src/services/location/location.contex
 import { SafeArea } from "./src/components/utility/safe-area.component";
 import { Navigation } from "./src/infrastructure/navigation";
 import { FavouritesContextProvider } from "./src/services/favourites/favourites.context";
+import * as firebase from "firebase"
+import { initializeApp } from "firebase/app";
+import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
 
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCi4tj35dz12MbNxBbLwZ2Bl_0B5hIdBRI",
+authDomain: "mealstogo-a88e5.firebaseapp.com",
+projectId: "mealstogo-a88e5",
+storageBucket: "mealstogo-a88e5.appspot.com",
+messagingSenderId: "406060758357",
+appId: "1:406060758357:web:b95b5ce080ac4a1b9f2bdc",
+};
+
+if(!firebase.apps.length){
+initializeApp(firebaseConfig);
+}
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  useEffect(()=>{
+    setTimeout(()=>{
+    firebase
+    .auth()
+    .signInWithEmailAndPassword("keith@proudcloud.io", "test123")
+    .then((user) => {
+      console.log(user)
+      setIsAuthenticated(true)
+
+    }).catch((e) => {
+      console.log(e)
+    })
+  }, 2000)
+  },[])
   //const [searchQuery, setSearchQuery] = useState('')
 
   //const onChangeSearch = query => setSearchQuery(query)
@@ -41,9 +72,12 @@ export default function App() {
     return null;
   }
 
+  if (!isAuthenticated) return null;
+
   return (
     <>
     <ThemeProvider theme={theme}>
+      <AuthenticationContextProvider>
       <FavouritesContextProvider>
       <LocationContextProvider> 
       <RestaurantsContextProvider>
@@ -51,6 +85,7 @@ export default function App() {
      </RestaurantsContextProvider>
      </LocationContextProvider>
      </FavouritesContextProvider>
+     </AuthenticationContextProvider>
      </ThemeProvider>
       <ExpoStatusBar style="auto" />
     </>
